@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../redux/userSlice";
 import Account from "./Account";
-import { getUsers } from "../api";
 import "../styles/UserContent.css";
 
 const UserContent = () => {
-  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
+  const { users, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const usersData = await getUsers();
-        setUsers(usersData);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-    fetchUsers();
-  }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="user-content">

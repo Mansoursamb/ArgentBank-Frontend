@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/userSlice";
 import "../styles/SignIn.css";
 
@@ -7,12 +8,20 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { loading, error, token } = useSelector((state) => state.user);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(loginUser({ email, password }));
   };
+
+  useEffect(() => {
+    console.log("Token:", token); //verif token
+    if (token) {
+      navigate("/user");
+    }
+  }, [token, navigate]);
 
   return (
     <main className="main bg-dark">

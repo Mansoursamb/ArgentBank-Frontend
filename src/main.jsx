@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./redux/store";
 import "./index.css";
 import Home from "./pages/Home";
-import SignInPage from "./pages/SignInPage"; // Assurez-vous que le chemin est correct
+import SignInPage from "./pages/SingnInPage.jsx"; // Assurez-vous que le chemin est correct
 import User from "./pages/User";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
