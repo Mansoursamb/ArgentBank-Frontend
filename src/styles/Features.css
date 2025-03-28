@@ -20,7 +20,10 @@
   flex: 1;
   padding: 2.5rem;
 }
-
+.feature-item img {
+  object-fit: cover;
+  width: 25%;
+}
 .feature-item-title {
   color: #222;
   font-size: 1.25rem;

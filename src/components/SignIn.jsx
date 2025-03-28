@@ -13,11 +13,18 @@ const SignIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!email || !password) {
+      alert("Please fill in both email and password.");
+      return;
+    }
+    console.log("Submitting credentials:", { email, password }); // Vérifiez
+    //  les données envoyées
     dispatch(loginUser({ email, password }));
   };
 
   useEffect(() => {
-    console.log("Token:", token); //verif token
+    console.log("Token in useEffect:", token); // Vérifiez
+    // si le token est défini
     if (token) {
       navigate("/user");
     }
@@ -47,14 +54,10 @@ const SignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="input-remember">
-            <input type="checkbox" id="remember-me" />
-            <label htmlFor="remember-me">Remember me</label>
-          </div>
           <button className="sign-in-button" type="submit" disabled={loading}>
             {loading ? "Signing in..." : "Sign In"}
           </button>
-          {error && <p className="error">{error.message}</p>}
+          {error && <p className="error">{error.message || error}</p>}
         </form>
       </section>
     </main>

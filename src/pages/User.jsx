@@ -1,6 +1,6 @@
 import React from "react";
 import UserContent from "../components/UserContent";
-import "../styles/User.css";
+import "../styles/UserContent.css";
 
 const User = () => {
   return (
