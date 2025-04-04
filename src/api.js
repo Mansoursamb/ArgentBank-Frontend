@@ -4,7 +4,7 @@ const API_URL = "http://localhost:3001/api/v1";
 
 export const loginUser = async (credentials) => {
   const response = await axios.post(`${API_URL}/user/login`, credentials);
-  return response.data;
+  return response.data.body;
 };
 
 export const fetchUser = async (token) => {
@@ -13,7 +13,7 @@ export const fetchUser = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response.data.body;
 };
 
 export const updateUser = async (data, token) => {
@@ -22,5 +22,5 @@ export const updateUser = async (data, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response.data.body;
 };

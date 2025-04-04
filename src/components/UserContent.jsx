@@ -38,12 +38,16 @@ const UserContent = () => {
   // Récupération des données utilisateur si le token est disponible
   useEffect(() => {
     if (token) {
+      console.log("Token in useEffect:", token); // Vérifiez si le token est disponible
       dispatch(fetchUser(token));
+    } else {
+      console.error("Token is null or undefined");
     }
   }, [dispatch, token]);
 
-  // Mise à jour des champs d'édition lorsque les données utilisateur changent
+  // Synchronisation des champs d'édition avec les données utilisateur
   useEffect(() => {
+    console.log("Updated user in UserContent:", user); // Vérifiez si les données utilisateur changent
     if (user) {
       setUserName(user.userName || "");
       setFirstName(user.firstName || "");
@@ -52,9 +56,42 @@ const UserContent = () => {
   }, [user]);
 
   // Gestion de la soumission du formulaire d'édition
-  const handleSave = () => {
-    dispatch(updateUser({ userName, firstName, lastName, token }));
-    setIsEditing(false);
+  // Dans UserContent.jsx
+
+  const handleSave = async () => {
+    // Dispatch l'action avec les données du formulaire (userName, firstName, lastName) et le token
+    const result = await dispatch(
+      updateUser({ userName, firstName, lastName, token })
+    );
+
+    // Vérifie si l'action s'est terminée avec succès (fulfilled)
+    if (updateUser.fulfilled.match(result)) {
+      // result.payload contient l'objet utilisateur retourné par l'API après la mise à jour
+      // (il contient le nouveau userName mais les anciens firstName/lastName dans ce cas)
+      const updatedUser = result.payload; // Pour plus de clarté
+
+      setIsEditing(false); // Ferme le formulaire d'édition
+
+      // Crée l'alerte personnalisée en utilisant les données de l'utilisateur retournées par l'API
+      alert(
+        `User information for ${updatedUser.firstName} ${updatedUser.lastName} updated successfully!`
+      );
+    } else {
+      // L'action a été rejetée (rejected)
+      // On pourrait même utiliser result.error.message pour une alerte plus précise
+      let errorMessage = "Failed to update user information.";
+      if (result.payload) {
+        // rejectWithValue renvoie l'erreur dans payload
+        errorMessage += `\nError: ${
+          typeof result.payload === "string"
+            ? result.payload
+            : JSON.stringify(result.payload)
+        }`;
+      } else if (result.error?.message) {
+        errorMessage += `\nError: ${result.error.message}`;
+      }
+      alert(errorMessage);
+    }
   };
 
   // Gestion des états de chargement et d'erreur

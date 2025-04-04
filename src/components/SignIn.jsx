@@ -11,20 +11,26 @@ const SignIn = () => {
   const navigate = useNavigate();
   const { loading, error, token } = useSelector((state) => state.user);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!email || !password) {
-      alert("Please fill in both email and password.");
-      return;
-    }
-    console.log("Submitting credentials:", { email, password }); // Vérifiez
-    //  les données envoyées
-    dispatch(loginUser({ email, password }));
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitting credentials:", { email, password });
 
+    dispatch(loginUser({ email, password }))
+      .then((result) => {
+        if (loginUser.fulfilled.match(result)) {
+          console.log("Login successful:", result.payload);
+          navigate("/user");
+        } else {
+          console.error("Login failed:", result.error.message);
+          alert("Failed to log in. Please check your credentials.");
+        }
+      })
+      .catch((error) => {
+        console.error("An unexpected error occurred:", error);
+        alert("An unexpected error occurred. Please try again.");
+      });
+  };
   useEffect(() => {
-    console.log("Token in useEffect:", token); // Vérifiez
-    // si le token est défini
     if (token) {
       navigate("/user");
     }
